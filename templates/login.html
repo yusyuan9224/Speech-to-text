@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>登入</h1>
+        <form action="{{ url_for('auth.login') }}" method="post">
+            <div>
+                <label for="username">帳號:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">密碼:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <label for="remember_me">記住我:</label>
+                <input type="checkbox" id="remember_me" name="remember_me">
+            </div>
+            <button type="submit">登入</button>
+        </form>
+        <!--<p>沒有帳號？<a href="{{ url_for('auth.register') }}">注册</a></p>-->
+    </div>
+</body>
+</html>

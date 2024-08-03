@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音訊轉文字工具</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <div class="left-header">
+            <h2>音訊轉文字工具</h2>
+        </div>
+        <div class="right-header">
+            <span id="user-info"></span>
+            <a href="/auth/logout" id="logout-btn">登出</a>
+        </div>
+    </header>
+    <div class="container">
+        <form id="upload-form">
+            <input type="file" id="file-input" accept="audio/*,video/*">
+            <div>
+                <label for="output-format">選擇輸出格式:</label>
+                <select id="output-format">
+                    <option value="text">文字檔案</option>
+                    <option value="text-timestamp">帶時間戳的文字檔案</option>
+                    <option value="srt">SubRip 字幕文件</option>
+                </select>
+            </div>
+            <div>
+                <label for="gpu-select">選擇顯示卡:</label>
+                <select id="gpu-select">
+                    <!-- GPU選項將在頁面加載後動態填充 -->
+                </select>
+            </div>
+            <div>
+                <label for="auto-download">是否完成後自動下載:</label>
+                <input type="checkbox" id="auto-download" name="auto-download">
+            </div>
+            <div>
+                <label for="send-email">是否需要彙整重點?/將結果重送至信箱</label>
+                <input type="checkbox" id="send-email" name="send-email">
+                <input type="email" id="email-input" name="email" placeholder="請輸入您的信箱" style="display:none;">
+            </div>
+            <button type="submit" class="primary-btn">上傳並轉換</button>
+        </form>
+        <div class="record-section">
+            <button id="start-record-btn" class="record-btn">開始錄音</button>
+            <button id="stop-record-btn" class="stop-record-btn" style="display:none;">停止錄音</button>
+            <div id="recording-indicator" style="display:none;">
+                <img src="/static/recording.gif" alt="Recording...">
+                <div id="record-timer">錄音時間: 0s</div>
+            </div>
+        </div>
+        <div id="processing" style="display:none;">
+            <img src="/static/loading.gif" alt="Loading...">
+        </div>
+        <div class="result-section">
+            <button id="download-btn" class="result-btn" style="display:none;">下載結果</button>
+            <a id="result-link" class="result-link" style="display:none;" target="_blank">在新視窗中打開結果</a>
+            <div class="time-elapsed" id="time-elapsed"></div>
+        </div>
+        <div class="timer" id="timer">時間: 0s</div>
+    </div>
+    <script src="/static/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/auth/userinfo')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.username) {
+                        document.getElementById('user-info').textContent = `您好，${data.username}`;
+                    }
+                });
+
+            window.addEventListener('beforeunload', function () {
+                fetch('/auth/logout', { method: 'GET' });
+            });
+        });
+    </script>
+</body>
+</html>
